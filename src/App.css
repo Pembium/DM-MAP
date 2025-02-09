@@ -1,0 +1,27 @@
+.App {
+  text-align: center;
+  font-family: Arial, sans-serif;
+}
+
+#map {
+  width: 90vw;
+  height: 80vh;
+  border: 2px solid black;
+  background-image: url("your-map.jpg"); /* Change this to your map */
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  margin: auto;
+  overflow: hidden;
+}
+
+.marker {
+  width: 12px;
+  height: 12px;
+  background: red;
+  position: absolute;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  border: 2px solid white;
+}
