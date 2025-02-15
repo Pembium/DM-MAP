@@ -1,0 +1,210 @@
+.App {
+  text-align: center;
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.App-header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background: white;
+  border-bottom: 2px solid black;
+  padding: 10px;
+  z-index: 1000;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#map-container {
+  width: 100vw;
+  height: calc(100vh - 60px); /* Adjust height to account for header */
+  overflow: auto;
+  position: relative;
+  margin-top: 60px; /* Adjust margin to account for header */
+}
+
+#map {
+  width: 200%;
+  height: 200%;
+  border: 2px solid black;
+  background-image: url("map.jpg"); /* Change this to your map */
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  position: absolute;
+  cursor: grab;
+  transform-origin: center center;
+}
+
+#map:active {
+  cursor: grabbing;
+}
+
+.marker {
+  width: 12px;
+  height: 12px;
+  background: red;
+  position: absolute;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  border: 2px solid white;
+}
+
+#side-panel {
+  position: fixed;
+  top: 10%;
+  right: 0;
+  width: 30vw;
+  height: 80vh;
+  border: 2px solid black;
+  padding: 10px;
+  background: white;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+#side-panel input {
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+#side-panel textarea {
+  width: 100%;
+  height: 100px;
+  margin-bottom: 10px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+#side-panel button {
+  margin-bottom: 10px;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#side-panel button:hover {
+  background-color: #0056b3;
+}
+
+#side-panel button:active {
+  background-color: #004085;
+}
+
+#controls {
+  display: flex;
+  gap: 10px;
+}
+
+#controls button {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  background-color: #28a745;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#controls button:hover {
+  background-color: #218838;
+}
+
+#controls button:active {
+  background-color: #1e7e34;
+}
+
+#controls input[type="file"] {
+  display: none;
+}
+
+#controls label {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#controls label:hover {
+  background-color: #0056b3;
+}
+
+#controls label:active {
+  background-color: #004085;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1001;
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 4px;
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.modal-content h3 {
+  margin: 0;
+}
+
+.modal-content label {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.modal-content input,
+.modal-content textarea {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.modal-content button {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.modal-content button:hover {
+  background-color: #0056b3;
+}
+
+.modal-content button:active {
+  background-color: #004085;
+}
