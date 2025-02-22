@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
+import defaultMap from './map.jpg'; // Import the default map image
 
 function App() {
     const [markers, setMarkers] = useState([]);
@@ -17,6 +18,9 @@ function App() {
     const [characterName, setCharacterName] = useState("");
     const [characterDescription, setCharacterDescription] = useState("");
     const [characterLink, setCharacterLink] = useState("");
+    const [currentMap, setCurrentMap] = useState("master"); // Track the current map view
+    const [currentMarkers, setCurrentMarkers] = useState([]); // Track markers for the current map
+    const [backgroundMap, setBackgroundMap] = useState(defaultMap); // Track the current background map
 
     useEffect(() => {
         const updateZoomLevels = () => {
@@ -37,6 +41,17 @@ function App() {
         return () => window.removeEventListener("resize", updateZoomLevels);
     }, []);
 
+    useEffect(() => {
+        if (currentMap === "master") {
+            setCurrentMarkers(markers);
+            setBackgroundMap(defaultMap); // Set the master map background
+        } else {
+            const marker = markers.find((m) => m.name === currentMap);
+            setCurrentMarkers(marker ? marker.subMarkers : []);
+            setBackgroundMap(marker ? marker.map : defaultMap); // Set the marker map background
+        }
+    }, [currentMap, markers]);
+
     const addMarker = (e) => {
         if (!isAddingMarker) return;
 
@@ -52,23 +67,42 @@ function App() {
     };
 
     const saveMarker = () => {
-        const newMarkers = [...markers, { ...newMarkerPosition, name, description, characters: [] }];
-        setMarkers(newMarkers);
+        if (currentMap === "master") {
+            const newMarkers = [...markers, { ...newMarkerPosition, name, description, characters: [], map: null, subMarkers: [] }];
+            setMarkers(newMarkers);
+        } else {
+            const updatedMarkers = markers.map((marker) =>
+                marker.name === currentMap
+                    ? { ...marker, subMarkers: [...marker.subMarkers, { ...newMarkerPosition, name, description, characters: [] }] }
+                    : marker
+            );
+            setMarkers(updatedMarkers);
+        }
         setShowModal(false);
     };
 
     const selectMarker = (index) => {
         setSelectedMarker(index);
-        setName(markers[index].name);
-        setDescription(markers[index].description);
-        setCharacters(markers[index].characters);
+        const marker = currentMarkers[index];
+        if (marker) {
+            setName(marker.name);
+            setDescription(marker.description);
+            setCharacters(marker.characters);
+        }
     };
 
     const updateMarker = () => {
-        const updatedMarkers = markers.map((marker, index) =>
+        const updatedMarkers = currentMarkers.map((marker, index) =>
             index === selectedMarker ? { ...marker, name, description } : marker
         );
-        setMarkers(updatedMarkers);
+        if (currentMap === "master") {
+            setMarkers(updatedMarkers);
+        } else {
+            const updatedMasterMarkers = markers.map((marker) =>
+                marker.name === currentMap ? { ...marker, subMarkers: updatedMarkers } : marker
+            );
+            setMarkers(updatedMasterMarkers);
+        }
     };
 
     const addCharacter = () => {
@@ -83,10 +117,17 @@ function App() {
         const updatedCharacters = [...characters, { name: characterName, description: characterDescription, link: characterLink }];
         setCharacters(updatedCharacters);
 
-        const updatedMarkers = markers.map((marker, index) =>
+        const updatedMarkers = currentMarkers.map((marker, index) =>
             index === selectedMarker ? { ...marker, characters: updatedCharacters } : marker
         );
-        setMarkers(updatedMarkers);
+        if (currentMap === "master") {
+            setMarkers(updatedMarkers);
+        } else {
+            const updatedMasterMarkers = markers.map((marker) =>
+                marker.name === currentMap ? { ...marker, subMarkers: updatedMarkers } : marker
+            );
+            setMarkers(updatedMasterMarkers);
+        }
         setShowModal(false);
     };
 
@@ -101,25 +142,46 @@ function App() {
         );
         setCharacters(updatedCharacters);
 
-        const updatedMarkers = markers.map((marker, index) =>
+        const updatedMarkers = currentMarkers.map((marker, index) =>
             index === selectedMarker ? { ...marker, characters: updatedCharacters } : marker
         );
-        setMarkers(updatedMarkers);
+        if (currentMap === "master") {
+            setMarkers(updatedMarkers);
+        } else {
+            const updatedMasterMarkers = markers.map((marker) =>
+                marker.name === currentMap ? { ...marker, subMarkers: updatedMarkers } : marker
+            );
+            setMarkers(updatedMasterMarkers);
+        }
     };
 
     const deleteCharacter = (charIndex) => {
         const updatedCharacters = characters.filter((_, index) => index !== charIndex);
         setCharacters(updatedCharacters);
 
-        const updatedMarkers = markers.map((marker, index) =>
+        const updatedMarkers = currentMarkers.map((marker, index) =>
             index === selectedMarker ? { ...marker, characters: updatedCharacters } : marker
         );
-        setMarkers(updatedMarkers);
+        if (currentMap === "master") {
+            setMarkers(updatedMarkers);
+        } else {
+            const updatedMasterMarkers = markers.map((marker) =>
+                marker.name === currentMap ? { ...marker, subMarkers: updatedMarkers } : marker
+            );
+            setMarkers(updatedMasterMarkers);
+        }
     };
 
     const deleteMarker = () => {
-        const updatedMarkers = markers.filter((_, index) => index !== selectedMarker);
-        setMarkers(updatedMarkers);
+        const updatedMarkers = currentMarkers.filter((_, index) => index !== selectedMarker);
+        if (currentMap === "master") {
+            setMarkers(updatedMarkers);
+        } else {
+            const updatedMasterMarkers = markers.map((marker) =>
+                marker.name === currentMap ? { ...marker, subMarkers: updatedMarkers } : marker
+            );
+            setMarkers(updatedMasterMarkers);
+        }
         setSelectedMarker(null);
     };
 
@@ -144,6 +206,28 @@ function App() {
             setMarkers(data);
         };
         reader.readAsText(file);
+    };
+
+    const uploadMarkerMap = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            const updatedMarkers = markers.map((marker, index) =>
+                index === selectedMarker ? { ...marker, map: event.target.result } : marker
+            );
+            setMarkers(updatedMarkers);
+        };
+        reader.readAsDataURL(file);
+    };
+
+    const openMarkerMap = (markerName) => {
+        setCurrentMap(markerName);
+    };
+
+    const goBackToMasterMap = () => {
+        setCurrentMap("master");
     };
 
     const zoomIn = () => {
@@ -197,11 +281,12 @@ function App() {
                     <button onClick={resetZoom}>Home</button>
                     <button onClick={zoomIn}>+</button>
                     <button onClick={() => setIsAddingMarker(true)}>Add Marker</button>
+                    {currentMap !== "master" && <button onClick={goBackToMasterMap}>Back to Master Map</button>}
                 </div>
             </header>
             <div id="map-container" onMouseDown={handleMapMouseDown}>
-                <div id="map" onClick={addMarker} style={{ transform: `scale(${zoom})`, transformOrigin: 'top left' }}>
-                    {markers.map((marker, index) => (
+                <div id="map" onClick={addMarker} style={{ transform: `scale(${zoom})`, transformOrigin: 'top left', backgroundImage: `url(${backgroundMap})`, backgroundSize: 'contain', backgroundRepeat: 'no-repeat', backgroundPosition: 'center' }}>
+                    {currentMarkers.map((marker, index) => (
                         <div
                             key={index}
                             className="marker"
@@ -212,7 +297,7 @@ function App() {
                     ))}
                 </div>
             </div>
-            {selectedMarker !== null && (
+            {selectedMarker !== null && currentMarkers[selectedMarker] && (
                 <div id="side-panel">
                     <button onClick={() => setSelectedMarker(null)}>Collapse</button>
                     <button onClick={deleteMarker}>Delete Marker</button>
@@ -230,6 +315,13 @@ function App() {
                         placeholder="Enter description"
                     />
                     <button onClick={addCharacter}>Add Character</button>
+                    <input type="file" onChange={uploadMarkerMap} />
+                    {currentMarkers[selectedMarker].map && (
+                        <div className="marker-map-preview">
+                            <img src={currentMarkers[selectedMarker].map} alt="Marker Map" style={{ width: '100%', height: 'auto' }} />
+                            <button onClick={() => openMarkerMap(currentMarkers[selectedMarker].name)}>Open Marker Map</button>
+                        </div>
+                    )}
                     <ul>
                         {characters.map((char, index) => (
                             <li key={index}>
