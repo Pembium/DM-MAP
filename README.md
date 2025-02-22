@@ -1,70 +1,76 @@
-# Getting Started with Create React App
+# World Planner
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project is an interactive map application for Dungeon Masters to plan and manage their campaigns. The application allows you to add markers, characters, and sub-maps to the main map.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+- Add and manage markers on the map
+- Add and manage characters associated with markers
+- Upload and view sub-maps for markers
+- Save and load map data to/from a file
+- Zoom in and out of the map
+- Reset zoom to the default level
 
-### `npm start`
+## Getting Started
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### Prerequisites
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- Node.js (version 14 or higher)
+- npm (version 6 or higher)
 
-### `npm test`
+### Installation
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+1. Clone the repository:
 
-### `npm run build`
+    ```bash
+    git clone https://github.com/your-username/world-planner.git
+    cd world-planner
+    ```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+2. Install the dependencies:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+    ```bash
+    npm install
+    ```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Running the Application
 
-### `npm run eject`
+1. Start the development server:
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+    ```bash
+    npm start
+    ```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+2. Open your browser and navigate to `http://localhost:3000`.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### Project Structure
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+- [src/](http://_vscodecontentref_/5)
+  - [App.js](http://_vscodecontentref_/6): Main application component
+  - [App.css](http://_vscodecontentref_/7): Styles for the application
+  - [map.jpg](http://_vscodecontentref_/8): Default map image
 
-## Learn More
+### Usage
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+1. **Add Marker**: Click the "Add Marker" button and then click on the map to place a new marker. Fill in the marker details in the modal that appears.
+2. **Add Character**: Select a marker and click the "Add Character" button. Fill in the character details in the modal that appears.
+3. **Upload Marker Map**: Select a marker and upload a sub-map image for the marker.
+4. **Open Marker Map**: Click the "Open Marker Map" button to switch to the sub-map view.
+5. **Back to Master Map**: Click the "Back to Master Map" button to return to the main map.
+6. **Save Map**: Click the "Save Map" button to save the current map data to a file.
+7. **Load Map**: Click the "Load Map" button to load map data from a file.
+8. **Zoom In/Out**: Use the zoom buttons to zoom in and out of the map.
+9. **Reset Zoom**: Click the "Home" button to reset the zoom to the default level.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Notes
 
-### Code Splitting
+- Ensure that the [map.jpg](http://_vscodecontentref_/9) file is located in the [src](http://_vscodecontentref_/10) directory.
+- The application uses the [map.jpg](http://_vscodecontentref_/11) file as the default background map.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+### Contributing
 
-### Analyzing the Bundle Size
+Contributions are welcome! Please open an issue or submit a pull request.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+### License
 
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+This project is licensed under the MIT License.
