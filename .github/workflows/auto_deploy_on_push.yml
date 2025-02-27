@@ -29,7 +29,7 @@ jobs:
         key: ${{ secrets.SERVER_SSH_KEY }}  # Your private SSH key (configured as a secret)
         port: 22  # Default SSH port (if different, specify here)
         script: |
-          cd /path/to/your/project  # Navigate to your project directory on the server
+          cd ~/${{ secrets.FILE_LOCATION }}  # Navigate to your project directory on the server
           git pull origin main  # Pull the latest code from the main branch
           npm install  # Install any new dependencies
           npm run build  # Build the React app (if needed)
