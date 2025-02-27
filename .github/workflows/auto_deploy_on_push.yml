@@ -3,8 +3,13 @@ name: Deploy React App to Server
 on:
   push:
     branches:
-      - main  # Trigger the workflow on push/merge to the 'main' branch
-
+      - master  # Trigger the workflow on push/merge to the 'main' branch
+  pull_request:
+    branches:
+      - master
+    types:
+      - closed # Triggers only when a PR is merged (not just opened)
+      
 jobs:
   deploy:
     runs-on: ubuntu-latest  # Use an Ubuntu runner for the job
