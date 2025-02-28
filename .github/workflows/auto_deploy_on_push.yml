@@ -22,10 +22,17 @@ jobs:
       uses: actions/setup-node@v2
       with:
         node-version: '16'  # Specify the version of Node.js
+        
+    - name: Verify repository contents
+      run: |
+        ls -la /home/runner/work/DM-MAP/DM-MAP
+        test -f /home/runner/work/DM-MAP/DM-MAP/package.json || (echo "package.json not found!" && exit 1)
 
     - name: Install dependencies
-      run: npm install  # Install dependencies locally (if needed, you can install on the server)
-
+      run: |
+        cd /home/runner/work/DM-MAP/dm-map  # Ensure correct directory
+        npm install  # Install dependencies
+        
     - name: SSH into server and deploy
       uses: appleboy/ssh-action@v0.1.0  # Use SSH action to connect to your server
       with:
@@ -36,7 +43,7 @@ jobs:
         port: 22  # Default SSH port (if different, specify here)
         script: |
           cd ~/${{ secrets.FILE_LOCATION }}  # Navigate to your project directory on the server
-          git pull origin main  # Pull the latest code from the main branch
+          git pull origin master  # Pull the latest code from the main branch
           npm install  # Install any new dependencies
           npm run build  # Build the React app (if needed)
           pm2 restart your-react-app  # Restart your app (or use another process manager)
