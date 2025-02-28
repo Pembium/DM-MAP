@@ -48,3 +48,4 @@ jobs:
           npm run build  # Build the React app (if needed)
           pm2 restart your-react-app  # Restart your app (or use another process manager)
         debug: true
+        timeout: 60s
