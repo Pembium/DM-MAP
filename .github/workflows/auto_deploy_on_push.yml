@@ -30,7 +30,7 @@ jobs:
 
     - name: Install dependencies
       run: |
-        cd /home/runner/work/DM-MAP  # Ensure correct directory
+        cd /home/runner/work/DM-MAP/DM-MAP/  # Ensure correct directory
         npm install  # Install dependencies
         
     - name: SSH into server and deploy
