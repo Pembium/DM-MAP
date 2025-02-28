@@ -25,8 +25,8 @@ jobs:
         
     - name: Verify repository contents
       run: |
-        ls -la /home/runner/work/
-        test -f /home/runner/work/package.json || (echo "package.json not found!" && exit 1)
+        ls -la /home/runner/work/DM-MAP/
+        test -f /home/runner/work/DM-MAP/package.json || (echo "package.json not found!" && exit 1)
 
     - name: Install dependencies
       run: |
