@@ -53,7 +53,7 @@ This project is an interactive map application for Dungeon Masters to plan and m
 ### Usage
 
 1. **Add Marker**: Click the "Add Marker" button and then click on the map to place a new marker. Fill in the marker details in the modal that appears.
-2. **Add Character**: Select a marker and click the "Add Character" button. Fill in the character details in the modal that appears.
+2. **Add Component**: Select a marker and click the "Add Component" button. Fill in the character details in the modal that appears.
 3. **Upload Marker Map**: Select a marker and upload a sub-map image for the marker.
 4. **Open Marker Map**: Click the "Open Marker Map" button to switch to the sub-map view.
 5. **Back to Master Map**: Click the "Back to Master Map" button to return to the main map.

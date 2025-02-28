@@ -7,17 +7,17 @@ function App() {
     const [selectedMarker, setSelectedMarker] = useState(null);
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
-    const [characters, setCharacters] = useState([]);
+    const [components, setComponents] = useState([]); // Renamed from characters
     const [zoom, setZoom] = useState(1);
     const [isAddingMarker, setIsAddingMarker] = useState(false);
     const [minZoom, setMinZoom] = useState(1);
     const [maxZoom, setMaxZoom] = useState(1);
     const [showModal, setShowModal] = useState(false);
-    const [modalType, setModalType] = useState(""); // "addMarker" or "addCharacter"
+    const [modalType, setModalType] = useState(""); // "addMarker" or "addComponent"
     const [newMarkerPosition, setNewMarkerPosition] = useState({ x: 0, y: 0 });
-    const [characterName, setCharacterName] = useState("");
-    const [characterDescription, setCharacterDescription] = useState("");
-    const [characterLink, setCharacterLink] = useState("");
+    const [componentName, setComponentName] = useState(""); // Renamed from characterName
+    const [componentDescription, setComponentDescription] = useState(""); // Renamed from characterDescription
+    const [componentLink, setComponentLink] = useState(""); // Renamed from characterLink
     const [currentMap, setCurrentMap] = useState("master"); // Track the current map view
     const [currentMarkers, setCurrentMarkers] = useState([]); // Track markers for the current map
     const [backgroundMap, setBackgroundMap] = useState(defaultMap); // Track the current background map
@@ -68,12 +68,12 @@ function App() {
 
     const saveMarker = () => {
         if (currentMap === "master") {
-            const newMarkers = [...markers, { ...newMarkerPosition, name, description, characters: [], map: null, subMarkers: [] }];
+            const newMarkers = [...markers, { ...newMarkerPosition, name, description, components: [], map: null, subMarkers: [] }];
             setMarkers(newMarkers);
         } else {
             const updatedMarkers = markers.map((marker) =>
                 marker.name === currentMap
-                    ? { ...marker, subMarkers: [...marker.subMarkers, { ...newMarkerPosition, name, description, characters: [] }] }
+                    ? { ...marker, subMarkers: [...marker.subMarkers, { ...newMarkerPosition, name, description, components: [] }] }
                     : marker
             );
             setMarkers(updatedMarkers);
@@ -87,7 +87,7 @@ function App() {
         if (marker) {
             setName(marker.name);
             setDescription(marker.description);
-            setCharacters(marker.characters);
+            setComponents(marker.components);
         }
     };
 
@@ -105,20 +105,20 @@ function App() {
         }
     };
 
-    const addCharacter = () => {
-        setCharacterName("");
-        setCharacterDescription("");
-        setCharacterLink("");
-        setModalType("addCharacter");
+    const addComponent = () => {
+        setComponentName("");
+        setComponentDescription("");
+        setComponentLink("");
+        setModalType("addComponent");
         setShowModal(true);
     };
 
-    const saveCharacter = () => {
-        const updatedCharacters = [...characters, { name: characterName, description: characterDescription, link: characterLink }];
-        setCharacters(updatedCharacters);
+    const saveComponent = () => {
+        const updatedComponents = [...components, { name: componentName, description: componentDescription, link: componentLink }];
+        setComponents(updatedComponents);
 
         const updatedMarkers = currentMarkers.map((marker, index) =>
-            index === selectedMarker ? { ...marker, characters: updatedCharacters } : marker
+            index === selectedMarker ? { ...marker, components: updatedComponents } : marker
         );
         if (currentMap === "master") {
             setMarkers(updatedMarkers);
@@ -131,19 +131,19 @@ function App() {
         setShowModal(false);
     };
 
-    const editCharacter = (charIndex) => {
-        const name = prompt("Edit character name:", characters[charIndex].name);
-        const description = prompt("Edit character description:", characters[charIndex].description);
-        const link = prompt("Edit link to D&D monster sheet:", characters[charIndex].link);
+    const editComponent = (compIndex) => {
+        const name = prompt("Edit component name:", components[compIndex].name);
+        const description = prompt("Edit component description:", components[compIndex].description);
+        const link = prompt("Edit link to D&D monster sheet:", components[compIndex].link);
         if (!name || !description || !link) return;
 
-        const updatedCharacters = characters.map((char, index) =>
-            index === charIndex ? { name, description, link } : char
+        const updatedComponents = components.map((comp, index) =>
+            index === compIndex ? { name, description, link } : comp
         );
-        setCharacters(updatedCharacters);
+        setComponents(updatedComponents);
 
         const updatedMarkers = currentMarkers.map((marker, index) =>
-            index === selectedMarker ? { ...marker, characters: updatedCharacters } : marker
+            index === selectedMarker ? { ...marker, components: updatedComponents } : marker
         );
         if (currentMap === "master") {
             setMarkers(updatedMarkers);
@@ -155,12 +155,12 @@ function App() {
         }
     };
 
-    const deleteCharacter = (charIndex) => {
-        const updatedCharacters = characters.filter((_, index) => index !== charIndex);
-        setCharacters(updatedCharacters);
+    const deleteComponent = (compIndex) => {
+        const updatedComponents = components.filter((_, index) => index !== compIndex);
+        setComponents(updatedComponents);
 
         const updatedMarkers = currentMarkers.map((marker, index) =>
-            index === selectedMarker ? { ...marker, characters: updatedCharacters } : marker
+            index === selectedMarker ? { ...marker, components: updatedComponents } : marker
         );
         if (currentMap === "master") {
             setMarkers(updatedMarkers);
@@ -314,7 +314,7 @@ function App() {
                         onBlur={updateMarker}
                         placeholder="Enter description"
                     />
-                    <button onClick={addCharacter}>Add Character</button>
+                    <button onClick={addComponent}>Add Component</button>
                     <input type="file" onChange={uploadMarkerMap} />
                     {currentMarkers[selectedMarker].map && (
                         <div className="marker-map-preview">
@@ -323,14 +323,14 @@ function App() {
                         </div>
                     )}
                     <ul>
-                        {characters.map((char, index) => (
+                        {components.map((comp, index) => (
                             <li key={index}>
-                                <strong>{char.name}</strong>: {char.description}
+                                <strong>{comp.name}</strong>: {comp.description}
                                 <br />
-                                <a href={char.link} target="_blank" rel="noopener noreferrer">Monster Sheet</a>
+                                <a href={comp.link} target="_blank" rel="noopener noreferrer">Monster Sheet</a>
                                 <br />
-                                <button onClick={() => editCharacter(index)}>Edit</button>
-                                <button onClick={() => deleteCharacter(index)}>Delete</button>
+                                <button onClick={() => editComponent(index)}>Edit</button>
+                                <button onClick={() => deleteComponent(index)}>Delete</button>
                             </li>
                         ))}
                     </ul>
@@ -360,34 +360,34 @@ function App() {
                     </div>
                 </div>
             )}
-            {showModal && modalType === "addCharacter" && (
+            {showModal && modalType === "addComponent" && (
                 <div className="modal">
                     <div className="modal-content">
-                        <h3>Add Character</h3>
+                        <h3>Add Component</h3>
                         <label>
                             Name:
                             <input
                                 type="text"
-                                value={characterName}
-                                onChange={(e) => setCharacterName(e.target.value)}
+                                value={componentName}
+                                onChange={(e) => setComponentName(e.target.value)}
                             />
                         </label>
                         <label>
                             Description:
                             <textarea
-                                value={characterDescription}
-                                onChange={(e) => setCharacterDescription(e.target.value)}
+                                value={componentDescription}
+                                onChange={(e) => setComponentDescription(e.target.value)}
                             />
                         </label>
                         <label>
                             Link:
                             <input
                                 type="text"
-                                value={characterLink}
-                                onChange={(e) => setCharacterLink(e.target.value)}
+                                value={componentLink}
+                                onChange={(e) => setComponentLink(e.target.value)}
                             />
                         </label>
-                        <button onClick={saveCharacter}>Save</button>
+                        <button onClick={saveComponent}>Save</button>
                         <button onClick={() => setShowModal(false)}>Cancel</button>
                     </div>
                 </div>
