@@ -47,3 +47,4 @@ jobs:
           npm install  # Install any new dependencies
           npm run build  # Build the React app (if needed)
           pm2 restart your-react-app  # Restart your app (or use another process manager)
+        debug: true
