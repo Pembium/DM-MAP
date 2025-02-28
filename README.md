@@ -1,11 +1,11 @@
 # World Planner
 
-This project is an interactive map application for Dungeon Masters to plan and manage their campaigns. The application allows you to add markers, characters, and sub-maps to the main map.
+This project is an interactive map application for Dungeon Masters to plan and manage their campaigns. The application allows you to add markers, components, and sub-maps to the main map.
 
 ## Features
 
 - Add and manage markers on the map
-- Add and manage characters associated with markers
+- Add and manage components associated with markers
 - Upload and view sub-maps for markers
 - Save and load map data to/from a file
 - Zoom in and out of the map
@@ -45,15 +45,15 @@ This project is an interactive map application for Dungeon Masters to plan and m
 
 ### Project Structure
 
-- [src/](http://_vscodecontentref_/5)
-  - [App.js](http://_vscodecontentref_/6): Main application component
-  - [App.css](http://_vscodecontentref_/7): Styles for the application
-  - [map.jpg](http://_vscodecontentref_/8): Default map image
+- [src](http://_vscodecontentref_/2)
+  - App.js: Main application component
+  - App.css: Styles for the application
+  - map.jpg: Default map image
 
 ### Usage
 
 1. **Add Marker**: Click the "Add Marker" button and then click on the map to place a new marker. Fill in the marker details in the modal that appears.
-2. **Add Component**: Select a marker and click the "Add Component" button. Fill in the character details in the modal that appears.
+2. **Add Component**: Select a marker and click the "Add Component" button. Fill in the component details in the modal that appears.
 3. **Upload Marker Map**: Select a marker and upload a sub-map image for the marker.
 4. **Open Marker Map**: Click the "Open Marker Map" button to switch to the sub-map view.
 5. **Back to Master Map**: Click the "Back to Master Map" button to return to the main map.
@@ -64,8 +64,8 @@ This project is an interactive map application for Dungeon Masters to plan and m
 
 ### Notes
 
-- Ensure that the [map.jpg](http://_vscodecontentref_/9) file is located in the [src](http://_vscodecontentref_/10) directory.
-- The application uses the [map.jpg](http://_vscodecontentref_/11) file as the default background map.
+- Ensure that the map.jpg file is located in the src directory.
+- The application uses the map.jpg file as the default background map.
 
 ### Contributing
 
