@@ -39,7 +39,7 @@ jobs:
         host: ${{ secrets.SERVER_IP }}  # Your server's IP address (configured as a secret)
         username: ${{ secrets.SERVER_USER }}  # Your server's SSH username (configured as a secret)
         key: ${{ secrets.SERVER_SSH_KEY }}  # Your private SSH key (configured as a secret)
-        password: ${{ secrets.PASSWORD }}
+        # password: ${{ secrets.PASSWORD }}
         port: 22  # Default SSH port (if different, specify here)
         script: |
           cd ~/${{ secrets.FILE_LOCATION }}  # Navigate to your project directory on the server
