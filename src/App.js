@@ -3,25 +3,28 @@ import "./App.css";
 import defaultMap from './map.jpg'; // Import the default map image
 
 function App() {
-    const [markers, setMarkers] = useState([]);
-    const [selectedMarker, setSelectedMarker] = useState(null);
-    const [name, setName] = useState("");
-    const [description, setDescription] = useState("");
-    const [components, setComponents] = useState([]); // Renamed from characters
-    const [zoom, setZoom] = useState(1);
-    const [isAddingMarker, setIsAddingMarker] = useState(false);
-    const [minZoom, setMinZoom] = useState(1);
-    const [maxZoom, setMaxZoom] = useState(1);
-    const [showModal, setShowModal] = useState(false);
-    const [modalType, setModalType] = useState(""); // "addMarker" or "addComponent"
-    const [newMarkerPosition, setNewMarkerPosition] = useState({ x: 0, y: 0 });
-    const [componentName, setComponentName] = useState(""); // Renamed from characterName
-    const [componentDescription, setComponentDescription] = useState(""); // Renamed from characterDescription
-    const [componentLink, setComponentLink] = useState(""); // Renamed from characterLink
-    const [currentMap, setCurrentMap] = useState("master"); // Track the current map view
-    const [currentMarkers, setCurrentMarkers] = useState([]); // Track markers for the current map
-    const [backgroundMap, setBackgroundMap] = useState(defaultMap); // Track the current background map
+    // State variables to manage various aspects of the application
+    const [markers, setMarkers] = useState([]); // Array of markers on the map
+    const [selectedMarker, setSelectedMarker] = useState(null); // Index of the currently selected marker
+    const [name, setName] = useState(""); // Name of the marker being added or edited
+    const [description, setDescription] = useState(""); // Description of the marker being added or edited
+    const [components, setComponents] = useState([]); // Array of components associated with the selected marker
+    const [zoom, setZoom] = useState(1); // Current zoom level of the map
+    const [isAddingMarker, setIsAddingMarker] = useState(false); // Boolean to indicate if a new marker is being added
+    const [minZoom, setMinZoom] = useState(1); // Minimum zoom level
+    const [maxZoom, setMaxZoom] = useState(1); // Maximum zoom level
+    const [showModal, setShowModal] = useState(false); // Boolean to control the visibility of the modal
+    const [modalType, setModalType] = useState(""); // Type of modal ("addMarker", "addComponent", or "editComponent")
+    const [newMarkerPosition, setNewMarkerPosition] = useState({ x: 0, y: 0 }); // Position of the new marker being added
+    const [componentName, setComponentName] = useState(""); // Name of the component being added or edited
+    const [componentDescription, setComponentDescription] = useState(""); // Description of the component being added or edited
+    const [componentLink, setComponentLink] = useState(""); // Link of the component being added or edited
+    const [currentMap, setCurrentMap] = useState("master"); // Current map view ("master" or a sub-map)
+    const [currentMarkers, setCurrentMarkers] = useState([]); // Array of markers for the current map view
+    const [backgroundMap, setBackgroundMap] = useState(defaultMap); // Background image for the current map view
+    const [editingComponentIndex, setEditingComponentIndex] = useState(null); // Index of the component being edited
 
+    // useEffect hook to update zoom levels based on the size of the map container and the map
     useEffect(() => {
         const updateZoomLevels = () => {
             const mapContainer = document.getElementById("map-container");
@@ -41,6 +44,7 @@ function App() {
         return () => window.removeEventListener("resize", updateZoomLevels);
     }, []);
 
+    // useEffect hook to update the current markers and background map based on the current map view
     useEffect(() => {
         if (currentMap === "master") {
             setCurrentMarkers(markers);
@@ -52,6 +56,7 @@ function App() {
         }
     }, [currentMap, markers]);
 
+    // Function to handle adding a new marker to the map
     const addMarker = (e) => {
         if (!isAddingMarker) return;
 
@@ -66,6 +71,7 @@ function App() {
         setIsAddingMarker(false);
     };
 
+    // Function to save the new marker to the state
     const saveMarker = () => {
         if (currentMap === "master") {
             const newMarkers = [...markers, { ...newMarkerPosition, name, description, components: [], map: null, subMarkers: [] }];
@@ -81,6 +87,7 @@ function App() {
         setShowModal(false);
     };
 
+    // Function to select a marker and update the state with its details
     const selectMarker = (index) => {
         setSelectedMarker(index);
         const marker = currentMarkers[index];
@@ -91,6 +98,7 @@ function App() {
         }
     };
 
+    // Function to update the details of the selected marker
     const updateMarker = () => {
         const updatedMarkers = currentMarkers.map((marker, index) =>
             index === selectedMarker ? { ...marker, name, description } : marker
@@ -105,6 +113,7 @@ function App() {
         }
     };
 
+    // Function to open the modal for adding a new component
     const addComponent = () => {
         setComponentName("");
         setComponentDescription("");
@@ -113,6 +122,7 @@ function App() {
         setShowModal(true);
     };
 
+    // Function to save the new component to the state
     const saveComponent = () => {
         const updatedComponents = [...components, { name: componentName, description: componentDescription, link: componentLink }];
         setComponents(updatedComponents);
@@ -124,21 +134,28 @@ function App() {
             setMarkers(updatedMarkers);
         } else {
             const updatedMasterMarkers = markers.map((marker) =>
-                marker.name === currentMap ? { ...marker, subMarkers: updatedMarkers } : marker
+                marker.name === currentMap ? { ...marker, subMarkers: updatedComponents } : marker
             );
             setMarkers(updatedMasterMarkers);
         }
         setShowModal(false);
     };
 
+    // Function to open the modal for editing a component
     const editComponent = (compIndex) => {
-        const name = prompt("Edit component name:", components[compIndex].name);
-        const description = prompt("Edit component description:", components[compIndex].description);
-        const link = prompt("Edit link to D&D monster sheet:", components[compIndex].link);
-        if (!name || !description || !link) return;
+        const component = components[compIndex];
+        setComponentName(component.name);
+        setComponentDescription(component.description);
+        setComponentLink(component.link);
+        setEditingComponentIndex(compIndex);
+        setModalType("editComponent");
+        setShowModal(true);
+    };
 
+    // Function to update the details of the component being edited
+    const updateComponent = () => {
         const updatedComponents = components.map((comp, index) =>
-            index === compIndex ? { name, description, link } : comp
+            index === editingComponentIndex ? { name: componentName, description: componentDescription, link: componentLink } : comp
         );
         setComponents(updatedComponents);
 
@@ -149,12 +166,14 @@ function App() {
             setMarkers(updatedMarkers);
         } else {
             const updatedMasterMarkers = markers.map((marker) =>
-                marker.name === currentMap ? { ...marker, subMarkers: updatedMarkers } : marker
+                marker.name === currentMap ? { ...marker, subMarkers: updatedComponents } : marker
             );
             setMarkers(updatedMasterMarkers);
         }
+        setShowModal(false);
     };
 
+    // Function to delete a component from the state
     const deleteComponent = (compIndex) => {
         const updatedComponents = components.filter((_, index) => index !== compIndex);
         setComponents(updatedComponents);
@@ -166,12 +185,13 @@ function App() {
             setMarkers(updatedMarkers);
         } else {
             const updatedMasterMarkers = markers.map((marker) =>
-                marker.name === currentMap ? { ...marker, subMarkers: updatedMarkers } : marker
+                marker.name === currentMap ? { ...marker, subMarkers: updatedComponents } : marker
             );
             setMarkers(updatedMasterMarkers);
         }
     };
 
+    // Function to delete a marker from the state
     const deleteMarker = () => {
         const updatedMarkers = currentMarkers.filter((_, index) => index !== selectedMarker);
         if (currentMap === "master") {
@@ -185,6 +205,7 @@ function App() {
         setSelectedMarker(null);
     };
 
+    // Function to save the current state of markers to a JSON file
     const saveToFile = () => {
         const data = JSON.stringify(markers);
         const blob = new Blob([data], { type: "application/json" });
@@ -196,6 +217,7 @@ function App() {
         URL.revokeObjectURL(url);
     };
 
+    // Function to load markers from a JSON file
     const loadFromFile = (e) => {
         const file = e.target.files[0];
         if (!file) return;
@@ -208,6 +230,7 @@ function App() {
         reader.readAsText(file);
     };
 
+    // Function to upload a sub-map for a marker
     const uploadMarkerMap = (e) => {
         const file = e.target.files[0];
         if (!file) return;
@@ -222,26 +245,32 @@ function App() {
         reader.readAsDataURL(file);
     };
 
+    // Function to open a sub-map view for a marker
     const openMarkerMap = (markerName) => {
         setCurrentMap(markerName);
     };
 
+    // Function to return to the master map view
     const goBackToMasterMap = () => {
         setCurrentMap("master");
     };
 
+    // Function to zoom in on the map
     const zoomIn = () => {
         setZoom(Math.min(zoom * 1.2, maxZoom));
     };
 
+    // Function to zoom out on the map
     const zoomOut = () => {
         setZoom(Math.max(zoom / 1.2, minZoom));
     };
 
+    // Function to reset the zoom level to the default
     const resetZoom = () => {
         setZoom(minZoom);
     };
 
+    // Function to handle dragging the map
     const handleMapMouseDown = (e) => {
         if (isAddingMarker) return;
 
@@ -360,10 +389,10 @@ function App() {
                     </div>
                 </div>
             )}
-            {showModal && modalType === "addComponent" && (
+            {showModal && (modalType === "addComponent" || modalType === "editComponent") && (
                 <div className="modal">
                     <div className="modal-content">
-                        <h3>Add Component</h3>
+                        <h3>{modalType === "addComponent" ? "Add Component" : "Edit Component"}</h3>
                         <label>
                             Name:
                             <input
@@ -387,7 +416,9 @@ function App() {
                                 onChange={(e) => setComponentLink(e.target.value)}
                             />
                         </label>
-                        <button onClick={saveComponent}>Save</button>
+                        <button onClick={modalType === "addComponent" ? saveComponent : updateComponent}>
+                            {modalType === "addComponent" ? "Save" : "Update"}
+                        </button>
                         <button onClick={() => setShowModal(false)}>Cancel</button>
                     </div>
                 </div>
